@@ -72,32 +72,45 @@ Se ha capturado una sesión SIP (archivo sip.cap.gz), que se puede abrir con Wir
  ** ¿Qué método SIP utiliza el UA para registrarse?
  -- REGISTER
  ** Además de REGISTER, ¿qué instrucciones SIP entiende el UA?
- -- SUBSCRIBE, INVITE, ACK, OPTION, BYE, CANCEL, BYE
-
+ -- SUBSCRIBE, INVITE, ACK, OPTION, BYE, CANCEL, BYE, NOTIFY, REFER, MESSAGE
 
 
 [Al terminar el ejercicio es recomendable hacer commit de los ficheros modificados]
 
 9. Fijémonos en las tramas siguientes a la número 46:
  ** ¿Se registra con éxito en el primer intento?
+ -- No se registra con éxito
  ** ¿Cómo sabemos si el registro se ha realizado correctamente o no?
+ -- El servidor envia una respuesta con un [ status: 200 OK]
  ** ¿Podrías identificar las diferencias entre el primer intento y el segundo de registro? (fíjate en el tamaño de los paquetes y mira a qué se debe el cambio)
+ -- Podemos comprobar que efectivamente hay un mayor de tamaño de paquetes en el segundo REGISTER debido
+    a que el cliente ya ha recogido información previamente del servidor aunque no haya tenido exito el   REGISTER SIP. 
  ** ¿Cuánto es el valor del tiempo de expiración de la sesión? Indica las unidades.
-
+ -- 3600
 
 10. Una vez registrados, podemos efectuar una llamada. Vamos a probar con el servicio de eco de Ekiga que nos permite comprobar si nos hemos conectado correctamente. El servicio de eco tiene la dirección sip:500@ekiga.net. Veamos el INVITE de cerca.
  ** ¿Puede verse el nombre del que efectúa la llamada, así como su dirección SIP?
+ -- Gregorio Robles, grex@ekiga.net
  ** ¿Qué es lo que contiene el cuerpo de la trama? ¿En qué formato/protocolo está?
+ -- Pide un "archivo" audio 5010 RTP/AVP 101 96 3 107 110 0 8 y un "archivo" de video (m): video 5014 RTP/AVP 31 / -- Se da a través de protocolo RTP
  ** ¿Tiene éxito el primer intento? ¿Cómo lo sabes?
+ -- No tiene exito, ya que no recibe la aceptación con 200 OK por parte del servidor
  ** ¿En qué se diferencia el segundo INVITE más abajo del primero? ¿A qué crees que se debe esto?
+ -- Tiene mayor peso el paquete de INVITE, ocurre igual en apartados anteriores con el metodo REGISTER
+    envia el INVITE con mas informacion adicional recibida previamente del servidor 
 
 
 11. Una vez conectado, estudia el intercambio de tramas.
  ** ¿Qué protocolo(s) se utiliza(n)? ¿Para qué sirven estos protocolos?
+ -- H.261 (tramas de audio y video) y  RTP Es un protocolo de nivel de sesión utilizado para la transmisión de información en tiempo real
  ** ¿Cuál es el tamaño de paquete de los mismos?
+ -- el tamaño de los paquetes RTP es de 214 bytes, los paquetes H.261 contienen datos entre 1024 bytes y 330
  ** ¿Se utilizan bits de padding?
+ -- No, [en la captura aparece Padding = 0]
  ** ¿Cuál es la periodicidad de los paquetes que se envían?
+ -- se envian aproximadamente cada 0,03 segundos
  ** ¿Cuántos bits/segundo estamos enviando?
+ -- 115938 btis
 
 
 
@@ -105,6 +118,7 @@ Se ha capturado una sesión SIP (archivo sip.cap.gz), que se puede abrir con Wir
 
 12. Vamos a ver más a fondo el intercambio RTP. En Telephony hay una opción RTP. Empecemos mirando los flujos RTP.
  ** ¿Cuántos flujos hay? ¿por qué?
+-- 2, se envian desde una ip origen a una ip destino
  ** ¿Cuántos paquetes se pierden?
  ** ¿Cuál es el valor máximo del delta? ¿Y qué es lo que significa el valor de delta?
  ** ¿Cuáles son los valores de jitter (medio y máximo)? ¿Qué quiere decir eso? ¿Estamos ante una conversación de calidad?
